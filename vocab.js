@@ -1,3 +1,3 @@
 function goback() {
-    window.location.href = "BelajarBahasaJepang.html"
+    window.location.href = "index.html"
 }
