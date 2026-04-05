@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz Hiragana</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    #app {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .soal-number {
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      color: white;
+      padding: 15px 30px;
+      border-radius: 15px;
+      font-size: 1.3em;
+      font-weight: 600;
+      box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+    }
+
+    .back-btn {
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      padding: 12px 25px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.1em;
+      font-weight: 600;
+      color: #667eea;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .question-container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 30px;
+      padding: 60px 40px;
+      margin-bottom: 40px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    .question {
+      font-size: 6em;
+      font-weight: 700;
+      color: #667eea;
+      margin: 0;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .choices-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .choice-btn {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      border: 3px solid #e0e0e0;
+      padding: 25px 15px;
+      border-radius: 15px;
+      font-size: 2em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      color: #333;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .choice-btn:hover {
+      transform: translateY(-5px);
+      border-color: #667eea;
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .choice-btn:active {
+      transform: translateY(-2px);
+    }
+
+    /* Modal Popup */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal {
+      background: white;
+      padding: 40px 50px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      animation: slideUp 0.3s ease;
+      max-width: 500px;
+    }
+
+    @keyframes slideUp {
+      from { 
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-icon {
+      font-size: 4em;
+      margin-bottom: 20px;
+    }
+
+    .modal h2 {
+      color: #e74c3c;
+      font-size: 2em;
+      margin-bottom: 15px;
+    }
+
+    .modal p {
+      color: #666;
+      font-size: 1.2em;
+      margin-bottom: 25px;
+    }
+
+    .modal-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      border-radius: 10px;
+      font-size: 1.1em;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .modal-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .completion-modal h2 {
+      color: #4CAF50;
+    }
+
+    .completion-icon {
+      color: #4CAF50;
+    }
+
+    @media (max-width: 768px) {
+      .choices-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+
+      .choice-btn {
+        padding: 20px 10px;
+        font-size: 1.5em;
+      }
+
+      .question {
+        font-size: 4em;
+      }
+
+      .soal-number {
+        font-size: 1em;
+        padding: 10px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="quiz-header">
+      <div class="soal-number">Soal {{ currentQuestion + 1 }}</div>
+      <button class="back-btn" @click="goBack">← Kembali</button>
+    </div>
+
+    <div class="question-container">
+      <h1 class="question">{{ questions[currentQuestion].romaji }}</h1>
+    </div>
+
+    <div class="choices-grid">
+      <button 
+        v-for="(choice, index) in shuffledChoices" 
+        :key="index"
+        class="choice-btn"
+        @click="checkAnswer(choice)"
+      >
+        {{ choice }}
+      </button>
+    </div>
+
+    <!-- Modal Salah -->
+    <div v-if="showWrongModal" class="modal-overlay" @click="closeModal">
+      <div class="modal" @click.stop>
+        <div class="modal-icon">❌</div>
+        <h2>Jawaban Salah!</h2>
+        <p>Jawaban yang benar adalah: <strong>{{ questions[wrongQuestionIndex].hiragana }}</strong></p>
+        <p>Kamu akan kembali ke soal pertama.</p>
+        <button class="modal-btn" @click="resetQuiz">Ulangi dari Awal</button>
+      </div>
+    </div>
+
+    <!-- Modal Selesai -->
+    <div v-if="showCompletionModal" class="modal-overlay">
+      <div class="modal" @click.stop>
+        <div class="modal-icon completion-icon">🎉</div>
+        <h2>Selamat!</h2>
+        <p>Kamu telah menyelesaikan semua 46 soal!</p>
+        <button class="modal-btn" @click="restartQuiz">Main Lagi</button>
+        <button class="modal-btn" @click="goBack" style="margin-left: 10px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Kembali ke Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          currentQuestion: 0,
+          showWrongModal: false,
+          showCompletionModal: false,
+          wrongQuestionIndex: 0,
+          shuffledChoices: [],
+          questions: [
+            { romaji: 'a', hiragana: 'あ' },
+            { romaji: 'i', hiragana: 'い' },
+            { romaji: 'u', hiragana: 'う' },
+            { romaji: 'e', hiragana: 'え' },
+            { romaji: 'o', hiragana: 'お' },
+            { romaji: 'ka', hiragana: 'か' },
+            { romaji: 'ki', hiragana: 'き' },
+            { romaji: 'ku', hiragana: 'く' },
+            { romaji: 'ke', hiragana: 'け' },
+            { romaji: 'ko', hiragana: 'こ' },
+            { romaji: 'sa', hiragana: 'さ' },
+            { romaji: 'shi', hiragana: 'し' },
+            { romaji: 'su', hiragana: 'す' },
+            { romaji: 'se', hiragana: 'せ' },
+            { romaji: 'so', hiragana: 'そ' },
+            { romaji: 'ta', hiragana: 'た' },
+            { romaji: 'chi', hiragana: 'ち' },
+            { romaji: 'tsu', hiragana: 'つ' },
+            { romaji: 'te', hiragana: 'て' },
+            { romaji: 'to', hiragana: 'と' },
+            { romaji: 'na', hiragana: 'な' },
+            { romaji: 'ni', hiragana: 'に' },
+            { romaji: 'nu', hiragana: 'ぬ' },
+            { romaji: 'ne', hiragana: 'ね' },
+            { romaji: 'no', hiragana: 'の' },
+            { romaji: 'ha', hiragana: 'は' },
+            { romaji: 'hi', hiragana: 'ひ' },
+            { romaji: 'fu', hiragana: 'ふ' },
+            { romaji: 'he', hiragana: 'へ' },
+            { romaji: 'ho', hiragana: 'ほ' },
+            { romaji: 'ma', hiragana: 'ま' },
+            { romaji: 'mi', hiragana: 'み' },
+            { romaji: 'mu', hiragana: 'む' },
+            { romaji: 'me', hiragana: 'め' },
+            { romaji: 'mo', hiragana: 'も' },
+            { romaji: 'ya', hiragana: 'や' },
+            { romaji: 'yu', hiragana: 'ゆ' },
+            { romaji: 'yo', hiragana: 'よ' },
+            { romaji: 'ra', hiragana: 'ら' },
+            { romaji: 'ri', hiragana: 'り' },
+            { romaji: 'ru', hiragana: 'る' },
+            { romaji: 're', hiragana: 'れ' },
+            { romaji: 'ro', hiragana: 'ろ' },
+            { romaji: 'wa', hiragana: 'わ' },
+            { romaji: 'wo', hiragana: 'を' },
+            { romaji: 'n', hiragana: 'ん' }
+          ]
+        };
+      },
+      mounted() {
+        this.generateChoices();
+      },
+      methods: {
+        generateChoices() {
+          const correctAnswer = this.questions[this.currentQuestion].hiragana;
+          const allHiragana = this.questions.map(q => q.hiragana);
+          
+          // Ambil 17 pilihan random (selain jawaban benar)
+          const wrongChoices = allHiragana
+            .filter(h => h !== correctAnswer)
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 17);
+          
+          // Gabungkan dengan jawaban benar dan acak posisinya
+          const allChoices = [...wrongChoices, correctAnswer];
+          this.shuffledChoices = allChoices.sort(() => Math.random() - 0.5);
+        },
+        checkAnswer(choice) {
+          const correctAnswer = this.questions[this.currentQuestion].hiragana;
+          
+          if (choice === correctAnswer) {
+            // Jawaban benar
+            if (this.currentQuestion < this.questions.length - 1) {
+              this.currentQuestion++;
+              this.generateChoices();
+            } else {
+              // Quiz selesai
+              this.showCompletionModal = true;
+            }
+          } else {
+            // Jawaban salah
+            this.wrongQuestionIndex = this.currentQuestion;
+            this.showWrongModal = true;
+          }
+        },
+        resetQuiz() {
+          this.currentQuestion = 0;
+          this.showWrongModal = false;
+          this.generateChoices();
+        },
+        restartQuiz() {
+          this.currentQuestion = 0;
+          this.showCompletionModal = false;
+          this.generateChoices();
+        },
+        closeModal() {
+          this.showWrongModal = false;
+        },
+        goBack() {
+          window.location.href = 'BelajarBahasaJepang.html';
+        }
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Belajar Bahasa Jepang</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 2px, transparent 1px);
+      background-size: 50px 50px;
+      animation: float 20s linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-50px, -50px); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 60px 80px;
+      border-radius: 30px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    .vocab-btn {
+      position: fixed;
+      top: 30px;
+      right: 30px;
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 10px 30px rgba(245, 87, 108, 0.4);
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+
+    .vocab-btn:hover {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 15px 40px rgba(245, 87, 108, 0.6);
+    }
+
+    .vocab-btn svg {
+      width: 35px;
+      height: 35px;
+      fill: white;
+    }
+
+    h1 {
+      font-size: 3.5em;
+      color: #667eea;
+      margin-bottom: 20px;
+      font-weight: 700;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .subtitle {
+      font-size: 1.3em;
+      color: #666;
+      margin-bottom: 50px;
+      font-weight: 300;
+    }
+
+    .start-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 20px 60px;
+      font-size: 1.5em;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .start-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+    }
+
+    .start-btn:active {
+      transform: translateY(-2px);
+    }
+
+    .decorative {
+      position: absolute;
+      font-size: 4em;
+      opacity: 0.1;
+      color: #667eea;
+      font-weight: bold;
+    }
+
+    .decorative:nth-child(1) { top: 20px; left: 20px; }
+    .decorative:nth-child(2) { bottom: 20px; right: 20px; }
+    .decorative:nth-child(3) { top: 50%; left: 10px; }
+    .decorative:nth-child(4) { top: 20%; right: 10px; }
+  </style>
+</head>
+<body>
+  <button class="vocab-btn" onclick="window.location.href='Vocab.html'" title="Buka Vocabulary">
+    <svg viewBox="0 0 24 24">
+      <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
+    </svg>
+  </button>
+
+  <div class="container">
+    <div class="decorative">あ</div>
+    <div class="decorative">か</div>
+    <div class="decorative">さ</div>
+    <div class="decorative">た</div>
+    
+    <h1>日本語を学ぼう</h1>
+    <p class="subtitle">Belajar Bahasa Jepang</p>
+    
+    <button class="start-btn" onclick="window.location.href='Quiz.html'">
+      START
+    </button>
+  </div>
+</body>
+</html>
